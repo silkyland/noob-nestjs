@@ -1,3 +1,4 @@
+import { I18nRequestScopeService } from 'nestjs-i18n';
 import { PrismaService } from './../prisma/prisma.service';
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -10,13 +11,19 @@ import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
-    PassportModule,
+    PassportModule.register({ session: true }),
     JwtModule.register({
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '60s' },
     }),
   ],
-  providers: [AuthService, PrismaService, LocalStrategy, JwtStrategy],
+  providers: [
+    AuthService,
+    PrismaService,
+    LocalStrategy,
+    JwtStrategy,
+    I18nRequestScopeService,
+  ],
   controllers: [AuthController],
   exports: [AuthService],
 })
